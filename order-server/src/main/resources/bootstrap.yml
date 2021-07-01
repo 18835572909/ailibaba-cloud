@@ -1,0 +1,31 @@
+server:
+  port: 1006
+
+spring:
+  application:
+    name: order-server
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: 124.71.80.133:8848
+        username: nacos
+        password: pUJW4EFDxVrQLhia
+        group: SpringCloudAlibaba
+      config:
+        enabled: true
+        server-addr: 124.71.80.133:8848
+        username: nacos
+        password: pUJW4EFDxVrQLhia
+        encode: UTF-8
+        group: SpringCloudAlibaba
+        namespace: ce9c5c61-6070-43eb-8bbf-5cea6c25e6bb
+        ## shared-configs和 extension-configs 是两种不同的方式引入
+        shared-configs:
+        - dataId: jdbc-business.yml
+        - dataId: rabbitmq.yml
+        file-extension: yml
+        refresh-enabled: true
+        config-retry-time: 30000
+        timeout: 30000
+
