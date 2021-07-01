@@ -1,0 +1,8 @@
+1. 配置文件中设置refresh=true时，nacos server修改文件后，控制台是刷新了配置文件。
+但是使用@Value的标签注入值是不变的，因为在Bean初始化后，已经注入。想要刷新@Value
+的值，在使用@Value类上加入@RefreshScope
+
+2. 服务注册和配置中心的namespace要相同，否则读取不到config文件，几遍设置shared-configs
+也是不可以的，官网对此说明：存在安全问题。
+
+

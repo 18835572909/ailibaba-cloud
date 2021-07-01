@@ -12,20 +12,57 @@ spring:
         username: nacos
         password: pUJW4EFDxVrQLhia
         group: SpringCloudAlibaba
+        namespace: 4586dceb-7322-4980-9a60-922b408cc1bf
       config:
         enabled: true
         server-addr: 124.71.80.133:8848
         username: nacos
         password: pUJW4EFDxVrQLhia
         encode: UTF-8
-        group: SpringCloudAlibaba
-        namespace: ce9c5c61-6070-43eb-8bbf-5cea6c25e6bb
+        namespace: 4586dceb-7322-4980-9a60-922b408cc1bf
         ## shared-configs和 extension-configs 是两种不同的方式引入
         shared-configs:
-        - dataId: jdbc-business.yml
-        - dataId: rabbitmq.yml
+          - dataId: ping.yml
+            group: SpringCloudAlibaba
+            refresh: true
+          - dataId: jdbc-business.yml
+            group: SpringCloudAlibaba
+            refresh: true
         file-extension: yml
-        refresh-enabled: true
         config-retry-time: 30000
         timeout: 30000
 
+#feign:
+#  client:
+#    config:
+#      feignName:
+#        # 相当于Request.Options 连接超时时间
+#        connectTimeout: 5000
+#        # 相当于Request.Options 读取超时时间
+#        readTimeout: 5000
+#        # 配置Feign的日志级别，相当于代码配置方式中的Logger
+#        loggerLevel: full
+##        # Feign的错误解码器，相当于代码配置方式中的ErrorDecoder
+##        errorDecoder: com.example.SimpleErrorDecoder
+##        # 配置重试，相当于代码配置方式中的Retryer
+##        retryer: com.example.SimpleRetryer
+##        # 配置拦截器，相当于代码配置方式中的RequestInterceptor
+##        requestInterceptors:
+##        - com.example.FooRequestInterceptor
+##        - com.example.BarRequestInterceptor
+##        # 是否对404错误解码
+##        decode404: false
+##        encode: com.example.SimpleEncoder
+##        decoder: com.example.SimpleDecoder
+##        contract: com.example.SimpleContract
+#  compression:
+#    request:
+#      # 配置请求GZIP压缩
+#      enabled: true
+#      # 配置压缩支持的MIME TYPE
+#      mime-types: text/xml,application/xml,application/json
+#      # 配置压缩数据大小的下限
+#      min-request-size: 2048
+#    # 配置响应GZIP压缩
+#    response:
+#      enabled: true

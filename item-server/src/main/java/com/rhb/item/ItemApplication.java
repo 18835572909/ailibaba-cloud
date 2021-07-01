@@ -1,4 +1,4 @@
-package com.rhb.order;
+package com.rhb.item;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -10,15 +10,17 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * {desc}
  *
  * @author renhuibo
- * @date 2021/7/1 11:23
+ * @date 2021/7/1 15:15
  */
 @Slf4j
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
-public class OrderApplication {
+public class ItemApplication {
+
   public static void main(String[] args) {
-    SpringApplication.run(OrderApplication.class,args);
-    log.info("Order Server start ... ");
+    SpringApplication.run(ItemApplication.class,args);
+    log.info("Item Server Start ... ");
   }
+
 }
