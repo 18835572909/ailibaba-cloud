@@ -5,6 +5,22 @@ spring:
   application:
     name: order-server
   cloud:
+    sentinel:
+      datasource:
+        ds:
+          nacos:
+            username: nacos
+            password: pUJW4EFDxVrQLhia
+            server-addr: 124.71.80.133:8848
+            namespace: 4586dceb-7322-4980-9a60-922b408cc1bf
+            dataId: ${spring.application.name}-sentinel
+            groupId: SpringCloudAlibaba
+            rule-type: flow
+            data-type: json
+      transport:
+        # 端口配置会在应用对应的机器上启动一个 Http Server，该 Server 会与 Sentinel 控制台做交互
+        port: 8718
+        dashboard: localhost:10002
     nacos:
       discovery:
         enabled: true
@@ -32,37 +48,38 @@ spring:
         config-retry-time: 30000
         timeout: 30000
 
-#feign:
-#  client:
-#    config:
-#      feignName:
-#        # 相当于Request.Options 连接超时时间
-#        connectTimeout: 5000
-#        # 相当于Request.Options 读取超时时间
-#        readTimeout: 5000
-#        # 配置Feign的日志级别，相当于代码配置方式中的Logger
-#        loggerLevel: full
-##        # Feign的错误解码器，相当于代码配置方式中的ErrorDecoder
-##        errorDecoder: com.example.SimpleErrorDecoder
-##        # 配置重试，相当于代码配置方式中的Retryer
-##        retryer: com.example.SimpleRetryer
-##        # 配置拦截器，相当于代码配置方式中的RequestInterceptor
-##        requestInterceptors:
-##        - com.example.FooRequestInterceptor
-##        - com.example.BarRequestInterceptor
-##        # 是否对404错误解码
-##        decode404: false
-##        encode: com.example.SimpleEncoder
-##        decoder: com.example.SimpleDecoder
-##        contract: com.example.SimpleContract
-#  compression:
-#    request:
-#      # 配置请求GZIP压缩
-#      enabled: true
-#      # 配置压缩支持的MIME TYPE
-#      mime-types: text/xml,application/xml,application/json
-#      # 配置压缩数据大小的下限
-#      min-request-size: 2048
-#    # 配置响应GZIP压缩
-#    response:
-#      enabled: true
+feign:
+  client:
+    config:
+      item-server:
+        # 相当于Request.Options 连接超时时间
+        connectTimeout: 5000
+        # 相当于Request.Options 读取超时时间
+        readTimeout: 100
+        # 配置Feign的日志级别，相当于代码配置方式中的Logger
+        loggerLevel: FULL
+        # Feign的错误解码器，相当于代码配置方式中的ErrorDecoder
+        errorDecoder: com.rhb.pojo.config.feign.SimpleErrorDecoder
+        # 配置重试，相当于代码配置方式中的Retryer
+        retryer: com.rhb.pojo.config.feign.SimpleRetryer
+        # 配置拦截器，相当于代码配置方式中的RequestInterceptor
+        requestInterceptors:
+        - com.rhb.pojo.config.feign.FooRequestInterceptor
+        - com.rhb.pojo.config.feign.BarRequestInterceptor
+        # 是否对404错误解码
+        decode404: false
+        encode: com.rhb.pojo.config.feign.SimpleEncoder
+        decoder: com.rhb.pojo.config.feign.SimpleDecoder
+  #        contract: com.rhb.pojo.config.feign.SimpleContract
+  compression:
+    request:
+      # 配置请求GZIP压缩
+      enabled: true
+      # 配置压缩支持的MIME TYPE
+      mime-types: text/xml,application/xml,application/json
+      # 配置压缩数据大小的下限
+      min-request-size: 2048
+    # 配置响应GZIP压缩
+    response:
+      enabled: true
+

@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author renhuibo
  * @date 2021/7/1 16:00
  */
-@FeignClient(value="order-server",fallback = ItemServiceFallback.class)
+@FeignClient(value="item-server",fallback = ItemServiceFallback.class)
 public interface ItemService extends ItemApi {
 
 }

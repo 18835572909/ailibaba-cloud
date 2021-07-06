@@ -24,7 +24,6 @@ public class ItemController implements ItemApi {
   OrderService orderService;
 
   @Override
-  @RequestMapping("defaultItem")
   public Item defaultItem(){
     return Item.builder()
         .tid(StrUtil.uuid())

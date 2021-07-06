@@ -2,4 +2,42 @@
 > https://github.com/alibaba/spring-cloud-alibaba/wiki/Sentinel
 > https://github.com/alibaba/Sentinel/wiki/%E6%B3%A8%E8%A7%A3%E6%94%AF%E6%8C%81
 
+1. 客户端启动（控制台）
+  官网下载相应jar包，添加相应的启动参数，以java -jar的形式启动就行。
+
+2. 异常：Failed to fetch metric from
+原因： sentinel想客户端发送心跳失败。（可以使用参数：csp.sentinel.heartbeat.client.ip）
+解决： 将sentinel和客户端放置在双方可以ping通的网段就可以（这个地方不用过多担心，正式服务器一般都在
+同一局域网内，这样就保证了网络问题。如果出现虚拟机或者虚拟化docker部署，需要指定相应的网卡信息）
+
+3. 启动脚本
+nohup java -Dserver.port=10001 -Dcsp.sentinel.dashboard.server=localhost:10002 -Dproject.name=sentinel-dashboard -Dsentinel.dashboard.auth.username=sentinel -Dsentinel.dashboard.auth.password=25infinc1PQAKSZv -jar sentinel-dashboard-1.8.1.jar >nohup.out 2>&1 &
+
+4. nacos持久化规则
+> 为什么持久化？
+  防止sentinel的server端重启后丢失规则配置。
+> 相关参数详解？
+  resource：资源名，即限流规则的作用对象（一般指url路径）
+  limitApp：流控针对的调用来源，若为 default 则不区分调用来源
+  grade：限流阈值类型（QPS 或并发线程数）；
+     - 0代表根据并发数量来限流，
+     - 1代表根据QPS来进行流量控制
+  count：限流阈值
+  strategy：调用关系限流策略
+  controlBehavior：流量控制效果
+     - 0-2（直接拒绝、Warm Up、匀速排队）
+  clusterMode：是否为集群模式（boolean类型）
+> 接入的时候，nacos配置不生效（没有自动注入流控规则）
+  a. 查看官网： https://github.com/alibaba/spring-cloud-alibaba/issues/759
+  b. 查看源码：
+      AbstractDataSource.loadConfig()->SentinelConverter.convert()
+      检测到AbstractDataSource.property参数（及加载的yml文件参数内容）缺少namespace参数。
+  c. 尝试添加namespace参数，试运行成功。
+  ##使用版本：
+  - sentinel 1.8.1
+  - jdk 1.8.0_152
+  - nacos 2.0.2
+
+$$ 不要骂我蠢，官网就是这样没有namespace的，或者说没有明确必须有的。
+
 

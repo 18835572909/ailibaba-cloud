@@ -15,7 +15,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-  @SentinelResource(value = "findOrderById")
+//  @SentinelResource(value = "findOrderById",
+//      blockHandlerClass = ,
+//      fallbackClass = ,
+//
+//  )
   @Override
   public Order findOrderByOid(String oid) {
     return Order.builder()

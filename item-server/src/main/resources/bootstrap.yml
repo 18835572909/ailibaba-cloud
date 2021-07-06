@@ -9,7 +9,7 @@ spring:
       transport:
         # 端口配置会在应用对应的机器上启动一个 Http Server，该 Server 会与 Sentinel 控制台做交互
         port: 8718
-        dashboard: 124.71.80.133:10001
+        dashboard: localhost:10008
     nacos:
       discovery:
         enabled: true
