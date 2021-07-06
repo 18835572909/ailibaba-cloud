@@ -12,6 +12,9 @@
     <module>order-server</module>
     <module>item-server</module>
     <module>common-server</module>
+    <module>common-zuul</module>
+    <module>common-gateway</module>
+    <module>common-seata</module>
   </modules>
 
   <properties>
