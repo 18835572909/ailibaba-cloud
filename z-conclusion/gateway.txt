@@ -1,0 +1,234 @@
+与zuul的区别：
+> zuul2.0之前采用tomcat容器，传统的ServletIO处理模型。
+ servlet使用Servlet container管理： 构造servlet对象->init()->业务操作->destory()。
+ container运行时接受请求，为每个请求分配一个线程，调用service()。
+> 每个请求一个线程，导致上下文切换的资源消耗，内存飙高。
+
+
+1. 转发规则的三个组成部分
+Route（路由）；	路由是网关的基本单元，由ID、URI、一组Predicate、一组Filter组成，根据Predicate进行匹配转发。
+Predicate（谓语、断言）：	路由转发的判断条件，目前SpringCloud Gateway支持多种方式，常见如：Path、Query、Method、Header等，写法必须遵循 key=vlue的形式
+Filter（过滤器）：过滤器是路由转发请求时所经过的过滤逻辑，可用于修改请求、响应内容
+
+2. 常见predicate:
+Path	  - Path=/gate/,/rule/	                                  当请求的路径为gate、rule开头的时，转发到http://localhost:9023服务器上
+  注意：1. “/gate/”这里是正则（eg：/gate/** -> target/**）
+        2. 这里相当于nginx的root，会将路径进行拼接
+Before	- Before=2017-01-20T17:42:47.789-07:00[America/Denver]	在某个时间之前的请求才会被转发到 http://localhost:9023服务器上
+After	  - After=2017-01-20T17:42:47.789-07:00[America/Denver]	  在某个时间之后的请求才会被转发
+Between	- Between=                                              在某个时间段之间的才会被转发
+          2017-01-20T17:42:47.789-07:00[America/Denver],2017-01-21T17:42:47.789-07:00[America/Denver]
+Cookie	- Cookie=chocolate, ch.p	                              名为chocolate的表单或者满足正则ch.p的表单才会被匹配到进行请求转发
+Header	- Header=X-Request-Id, \d+	                            携带参数X-Request-Id或者满足\d+的请求头才会匹配
+Host	  - Host=www.hd123.com	                                  当主机名为www.hd123.com的时候直接转发到http://localhost:9023服务器上
+Method	- Method=GET	                                          只有GET方法才会匹配转发请求，还可以限定POST、PUT等请求方式
+
+3. yml配置
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: gateway-service
+          uri: https://www.baidu.com
+          order: 0
+          predicates:
+            - Host=**.foo.org
+            - Path=/headers
+            - Method=GET
+            - Header=X-Request-Id, \d+
+            - Query=foo, ba.
+            - Query=baz
+            - Cookie=chocolate, ch.p
+            - RemoteAddr=192.168.1.1/24
+           ### 请求路径前加上/app
+           filters:
+           - PrefixPath=/app
+
+4. 过滤器12种（当配置多个filter时，优先定义的会被调用，剩余的filter将不会生效 &&只执行一个，不是执行器链&&）
+> PrefixPath
+    routes:
+    - id: route
+      uri: https://example.org
+      filters:
+      - PrefixPath=/mypath
+  请求https://example.org/hello ->  https://example.org/mypath/hello
+> RedirectTo
+    routes:
+    - id: route
+      uri: https://example.org
+      filters:
+      - RedirectTo=302, https://acme.org
+  重定向包括：响应状态码和重定向路径
+> RemoveRequestHeader
+     routes:
+     - id: route
+       uri: https://example.org
+       filters:
+       - RemoveRequestHeader=X-Request-Foo
+  去掉请求头：X-Request-Foo
+> RemoveResponseHeader
+     routes:
+     - id: route
+       uri: https://example.org
+       filters:
+       - RemoveResponseHeader=X-Request-Foo
+  去掉响应头： X-Request-Foo
+> RemoveRequestParameter
+     routes:
+     - id: route
+       uri: https://example.org
+       filters:
+       - RemoveRequestParameter=token
+  去掉请求参数：token
+> RewritePath
+     routes:
+     - id: route
+       uri: https://example.org
+       predicates:
+       - Path=/test/**
+       filters:
+       - RewritePath=/where(?<segment>/?.*), /test(?<segment>/?.*)
+  修改路径： /where/... 改成 test/...
+> SetPath
+      routes:
+      - id: route
+        uri: https://example.org
+        predicates:
+        - Path=/red/{segment}
+        filters:
+        - SetPath=/{segment}
+  修改路径：请求/red/hello -> /hello
+> SetRequestHeader
+      routes:
+      - id: route
+        uri: https://example.org
+        filters:
+        - SetRequestHeader=X-Request-Red, Blue
+  设置请求头：X-Request-Red, Blue
+> SetStatus
+      routes:
+      - id: route
+        uri: https://example.org
+        filters:
+        - SetStatus=401
+  设置响应状态码：401
+> StripPrefix
+      routes:
+      - id: route
+        uri: https://nameservice
+        predicates:
+        - Path=/name/**
+        filters:
+        - StripPrefix=2
+  设置跳过前缀： http://nameservice/name/api/hello -> http://nameservice/hello
+> RequestSize
+      routes:
+      - id: route
+        uri: http://localhost:8080/upload
+        predicates:
+        - Path=/upload
+        filters:
+        - name: RequestSize
+          args:
+            maxSize: 5000000
+  设置请求大小：当请求头超过5M的时候会报413
+> Default-filters
+  spring:
+    cloud:
+      gateway:
+        default-filters:
+        - AddResponseHeader=X-Response-Default-Red, Default-Blue
+        - PrefixPath=/httpbin
+  对所有请求添加过滤器
+
+5. 熔断降级
+      routes:
+      - id: rateLimit_route
+        uri: http://localhost:8000
+        order: 0
+        predicates:
+          - Path=/test/**
+        filters:
+          - StripPrefix=1
+          - name: Hystrix
+            args:
+              name: fallbackCmdA
+              fallbackUri: forward:/fallbackA
+
+ hystrix.command.fallbackCmdA.execution.isolation.thread.timeoutInMilliseconds: 5000
+ 注意点： 需要在单独设置commandKey的超时时间。
+ 疑惑：在介绍Filter的时候，特别申明，只有一个Filter生效，这个地方引入Hystrix和StripPrefix两种过滤器？
+
+6. 限流机制
+  server:
+    port: 8081
+  spring:
+    cloud:
+      gateway:
+        routes:
+        - id: limit_route
+          uri: http://httpbin.org:80/get
+          predicates:
+          - After=2017-01-20T17:42:47.789-07:00[America/Denver]
+          filters:
+          - name: RequestRateLimiter
+            args:
+              key-resolver: '#{@userKeyResolver}'
+              redis-rate-limiter.replenishRate: 1
+              redis-rate-limiter.burstCapacity: 3
+    application:
+      name: cloud-gateway
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+参数详解：
+burstCapacity：令牌桶总容量
+replenishRate：每秒填充的量
+key-resolver：由于使用redis实现限流，这里定义限流key的解析器
+
+
+
+## 熔断器常见问题：
+1. Unable to find GatewayFilterFactory with name Hystrix
+引入
+  <dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+  </dependency>
+去掉
+  <dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+  </dependency>
+
+
+## 限流配置常见问题：
+1. Unable to find GatewayFilterFactory with name RequestRateLimiter
+引入：
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+    </dependency>
+配置：保证redis可以链接
+  spring:
+    redis:
+      host: 124.71.80.133
+      port: 6380
+      database: 0
+      password: LOQYkOKUgUBrywjo
+
+2. 默认是使用gateway内置的redis实现，在接口被限流后，redis中存储键值：
+# 存储的是当前时间的秒数，也就是System.currentTimeMillis()/1000或者Instant.now().getEpochSecond()。
+request_rate_limiter.{key}.timestamp：
+# 存储的是当前这秒钟对应的可用令牌数量
+request_rate_limiter.{key}.tokens：
+
+
+
+
+

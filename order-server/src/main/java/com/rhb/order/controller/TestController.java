@@ -31,4 +31,10 @@ public class TestController {
     log.info(json);
     return "hello";
   }
+
+  @GetMapping("timeout")
+  public String timeout() throws Exception {
+    Thread.sleep(50000);
+    return "hello";
+  }
 }

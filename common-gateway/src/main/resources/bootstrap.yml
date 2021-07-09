@@ -1,0 +1,118 @@
+server:
+  port: 8888
+
+feign:
+  client:
+    config:
+      item-server:
+        # 相当于Request.Options 连接超时时间
+        connectTimeout: 5000
+        # 相当于Request.Options 读取超时时间
+        readTimeout: 100
+        # 配置Feign的日志级别，相当于代码配置方式中的Logger
+        loggerLevel: FULL
+        # Feign的错误解码器，相当于代码配置方式中的ErrorDecoder
+        errorDecoder: com.rhb.pojo.config.feign.SimpleErrorDecoder
+        # 配置重试，相当于代码配置方式中的Retryer
+        retryer: com.rhb.pojo.config.feign.SimpleRetryer
+        # 配置拦截器，相当于代码配置方式中的RequestInterceptor
+        requestInterceptors:
+        - com.rhb.pojo.config.feign.FooRequestInterceptor
+        - com.rhb.pojo.config.feign.BarRequestInterceptor
+        # 是否对404错误解码
+        decode404: false
+        encode: com.rhb.pojo.config.feign.SimpleEncoder
+        decoder: com.rhb.pojo.config.feign.SimpleDecoder
+  #        contract: com.rhb.pojo.config.feign.SimpleContract
+  compression:
+    request:
+      # 配置请求GZIP压缩
+      enabled: true
+      # 配置压缩支持的MIME TYPE
+      mime-types: text/xml,application/xml,application/json
+      # 配置压缩数据大小的下限
+      min-request-size: 2048
+    # 配置响应GZIP压缩
+    response:
+      enabled: true
+
+
+spring:
+  application:
+    name: route-server
+  redis:
+    host: 124.71.80.133
+    port: 6380
+    database: 0
+    password: LOQYkOKUgUBrywjo
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: 124.71.80.133:8848
+        username: nacos
+        password: pUJW4EFDxVrQLhia
+        group: SpringCloudAlibaba
+        namespace: 4586dceb-7322-4980-9a60-922b408cc1bf
+      config:
+        server-addr: 124.71.80.133:8848
+        dataId: route
+        group: SpringCloudAlibaba
+        refresh: true
+        username: nacos
+        password: pUJW4EFDxVrQLhia
+    gateway:
+      # 主要是负责将注册中心的服务设置以服务名匹配的转发规则
+      discovery:
+        locator:
+          enabled: true  #表明gateway开启服务注册和发现的功能，并且spring cloud gateway自动根据服务发现为每一个服务创建了一个router，这个router将以服务名开头的请求路径转发到对应的服务
+          lower-case-service-id: true  #是将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了
+      routes:
+      - id: test_route
+        uri: http://www.baidu.com
+        order: 10
+        predicates:
+        - Path=/gate/,/rule/
+        filters:
+        - StripPrefix=1
+      - id: hystrix_route
+        uri: http://127.0.0.1:1006
+        order: 10
+        predicates:
+          - Path=/order/**
+        filters:
+          - StripPrefix=1
+          - name: Hystrix
+            args:
+              name: fallbackCmd
+              fallbackUri: forward:/fallback
+      - id: ratelimit_route
+        uri: http://127.0.0.1:1006
+        order: 10
+        predicates:
+        - Path=/ratelimit/**
+        filters:
+        - StripPrefix=1
+        - name: RequestRateLimiter
+          args:
+            key-resolver: '#{@userIdKeyResolver}'
+            #令牌桶填充的速率。
+            redis-rate-limiter.replenishRate: 1
+            #这是令牌桶可以容纳的令牌数量。将此值设置为零会阻止所有请求。
+            redis-rate-limiter.burstCapacity: 1
+            # 这是每个请求从存储桶中获取的令牌数量，默认为1。
+            redis-rate-limiter.requestedTokens: 1
+
+#hystrix熔断超时配置
+hystrix:
+  command:
+    fallbackCmd:
+      execution:
+        #开启超时配置(默认为开启)
+        timeout:
+          enabled: true
+        #设置超时时间
+        isolation:
+          thread:
+            timeoutInMilliseconds: 4000
+
