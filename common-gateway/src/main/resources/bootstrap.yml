@@ -1,5 +1,5 @@
 server:
-  port: 10000
+  port: 10002
 
 feign:
   client:
@@ -117,9 +117,17 @@ spring:
               replenishRate: 1
               #这是令牌桶可以容纳的令牌数量。将此值设置为零会阻止所有请求。
               burstCapacity: 1
+  boot:
+    admin:
+      client:
+        url: http://localhost:10001
+        username: admin
+        password: 6uygd2YlFdHj421J
+        instance:
+          # 注册实例时，优先使用 IP
+          prefer-ip: true
 
-
-#hystrix熔断超时配置
+# hystrix熔断超时配置
 hystrix:
   command:
     fallbackCmd:
@@ -132,3 +140,17 @@ hystrix:
           thread:
             timeoutInMilliseconds: 4000
 
+# 健康监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+    logfile:
+      external-file: ./z-logs/gateway.log
+
+logging:
+  config: classpath:logback-spring2.xml
