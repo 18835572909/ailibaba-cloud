@@ -191,6 +191,62 @@ burstCapacity：令牌桶总容量
 replenishRate：每秒填充的量
 key-resolver：由于使用redis实现限流，这里定义限流key的解析器
 
+7. 健康检测
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+8. 跨域处理
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            allowed-methods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTION
+
+9. 动态nacos配置
+
+10. Swagger聚合微服务系统API文档
+
+11. 过滤器开发
+  a. 定义全局过滤器
+  b. 定义局部过滤器
+
+12. Sentinel完成流控和降级
+  a. 借助于全局的filter进行请求拦截: SentinelGateWayFilter配置
+      @Bean//拦截请求
+      @Order(Ordered.HIGHEST_PRECEDENCE)
+      public GlobalFilter sentinelGatewayFilter() {
+        return new SentinelGatewayFilter();
+      }
+  b. 注解方式进行声明，为了让注解生效
+      @Bean
+      public SentinelResourceAspect sentinelResourceAspect() {
+        return new SentinelResourceAspect();
+      }
+  c. 自定义异常处理
+      /**
+       * 配置限流的异常处理器:SentinelGatewayBlockExceptionHandler
+       */
+      @Bean
+      @Order(Ordered.HIGHEST_PRECEDENCE)
+      public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler() {
+          return new SentinelGatewayBlockExceptionHandlerEX(viewResolvers, serverCodecConfigurer);
+      }
 
 
 ## 熔断器常见问题：
@@ -206,7 +262,6 @@ key-resolver：由于使用redis实现限流，这里定义限流key的解析器
     <artifactId>spring-cloud-starter-openfeign</artifactId>
   </dependency>
 
-
 ## 限流配置常见问题：
 1. Unable to find GatewayFilterFactory with name RequestRateLimiter
 引入：
@@ -221,7 +276,6 @@ key-resolver：由于使用redis实现限流，这里定义限流key的解析器
       port: 6380
       database: 0
       password: LOQYkOKUgUBrywjo
-
 2. 默认是使用gateway内置的redis实现，在接口被限流后，redis中存储键值：
 # 存储的是当前时间的秒数，也就是System.currentTimeMillis()/1000或者Instant.now().getEpochSecond()。
 request_rate_limiter.{key}.timestamp：
