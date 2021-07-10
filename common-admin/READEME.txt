@@ -1,0 +1,27 @@
+Spring Boot Admin 为已注册的应用程序提供以下功能：
+- 显示健康状态
+- 显示详细信息，例如
+- JVM 和内存指标
+- micrometer.io 指标
+- 数据源指标
+- 缓存指标
+- 显示构建信息编号
+- 关注并下载日志文件
+- 查看 jvm 系统和环境属性
+- 查看 Spring Boot 配置属性
+- 支持 Spring Cloud 的 postable /env- &/refresh-endpoint
+- 简单的日志级别管理
+- 与 JMX-beans 交互
+- 查看线程转储
+- 查看http-trace
+- 查看审计事件
+- 查看 http 端点
+- 查看计划任务
+- 查看和删除活动会话（使用 spring-session）
+- 查看 Flyway / Liquibase 数据库迁移
+- 下载堆转储
+- 状态更改通知（通过电子邮件、Slack、Hipchat 等）
+- 状态变化的事件日志（非持久）
+
+
+## 注意与boot和cloud的版本兼容性问题

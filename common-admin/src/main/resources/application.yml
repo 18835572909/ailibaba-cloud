@@ -1,0 +1,19 @@
+server:
+  port: 10001
+
+spring:
+  application:
+    name: admin-server
+  security:
+    user:
+      name: admin
+      password: 6uygd2YlFdHj421J
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: 124.71.80.133:8848
+        username: nacos
+        password: pUJW4EFDxVrQLhia
+        group: SpringCloudAlibaba
+        namespace: 4586dceb-7322-4980-9a60-922b408cc1bf

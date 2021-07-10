@@ -15,6 +15,7 @@
     <module>common-zuul</module>
     <module>common-gateway</module>
     <module>common-seata</module>
+    <module>common-admin</module>
   </modules>
 
   <properties>
