@@ -49,6 +49,17 @@
       <version>1.5.2</version>
     </dependency>
 
+    <!--接入admin-server进行监控-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>de.codecentric</groupId>
+      <artifactId>spring-boot-admin-starter-client</artifactId>
+      <version>2.3.0</version>
+    </dependency>
   </dependencies>
 
   <build>

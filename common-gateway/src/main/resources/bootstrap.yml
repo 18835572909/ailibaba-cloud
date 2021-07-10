@@ -120,7 +120,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:10001
+        url: http://124.71.80.133:10002
         username: admin
         password: 6uygd2YlFdHj421J
         instance:

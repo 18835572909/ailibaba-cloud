@@ -47,7 +47,15 @@ spring:
         file-extension: yml
         config-retry-time: 30000
         timeout: 30000
-
+  boot:
+    admin:
+      client:
+        url: http://124.71.80.133:10002
+        username: admin
+        password: 6uygd2YlFdHj421J
+        instance:
+          # 注册实例时，优先使用 IP
+          prefer-ip: true
 feign:
   client:
     config:
@@ -83,3 +91,17 @@ feign:
     response:
       enabled: true
 
+# 健康监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+    logfile:
+      external-file: ./z-logs/order.log
+
+logging:
+  config: classpath:logback-spring2.xml
