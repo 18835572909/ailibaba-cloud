@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 10000
 
 feign:
   client:
@@ -86,13 +86,13 @@ spring:
             args:
               name: fallbackCmd
               fallbackUri: forward:/fallback
-      - id: ratelimit_route
+      - id: redis_ratelimit_route
         uri: http://127.0.0.1:1006
         order: 10
         predicates:
-        - Path=/ratelimit/**
+        - Path=/redis/ratelimit/**
         filters:
-        - StripPrefix=1
+        - StripPrefix=2
         - name: RequestRateLimiter
           args:
             key-resolver: '#{@userIdKeyResolver}'
@@ -102,6 +102,22 @@ spring:
             redis-rate-limiter.burstCapacity: 1
             # 这是每个请求从存储桶中获取的令牌数量，默认为1。
             redis-rate-limiter.requestedTokens: 1
+      - id: memory_ratelimit_route
+        uri: http://127.0.0.1:1006
+        order: 10
+        predicates:
+        - Path=/memory/ratelimit/**
+        filters:
+        - StripPrefix=2
+        - name: RequestRateLimiter
+          args:
+            key-resolver: '#{@userIdKeyResolver}'
+            in-memory-rate-limiter:
+              #令牌桶填充的速率。
+              replenishRate: 1
+              #这是令牌桶可以容纳的令牌数量。将此值设置为零会阻止所有请求。
+              burstCapacity: 1
+
 
 #hystrix熔断超时配置
 hystrix:

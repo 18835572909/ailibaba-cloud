@@ -40,6 +40,10 @@ public class AccessLogGlobalFilter implements GlobalFilter {
   private final ObjectMapper mapper = new ObjectMapper();
   private final DataBufferFactory dataBufferFactory = new NettyDataBufferFactory(ByteBufAllocator.DEFAULT);
 
+  /**
+   * 进入filter的是已经匹配转发后的请求
+   * eg: /route/hello -> /hello
+   */
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     ServerHttpRequest request = exchange.getRequest();
