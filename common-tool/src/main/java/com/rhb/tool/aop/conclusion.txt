@@ -4,3 +4,6 @@
 2. MethodInterceptor + pointcut：Annotation -> DefaultPointcutAdvisor
 
 3. 自定义注解 + @Pointcut + @Aspect
+
+## 拦截器思路：
+> WebMvcConfigure.addInterceptor(DefineInterceptor extends HandlerInterceptor)
