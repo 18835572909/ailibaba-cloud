@@ -16,6 +16,7 @@
     <module>common-gateway</module>
     <module>common-seata</module>
     <module>common-admin</module>
+    <module>common-tool</module>
   </modules>
 
   <properties>

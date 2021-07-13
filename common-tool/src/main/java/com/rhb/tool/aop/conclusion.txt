@@ -1,0 +1,6 @@
+## Spring 实现aop的三种方式
+1. MethodInterceptor + pointcut：aspectj execution -> DefaultPointcutAdvisor
+
+2. MethodInterceptor + pointcut：Annotation -> DefaultPointcutAdvisor
+
+3. 自定义注解 + @Pointcut + @Aspect
