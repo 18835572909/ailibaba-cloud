@@ -9,14 +9,17 @@
   <packaging>pom</packaging>
   <version>1.0.0-SNAPSHOT</version>
   <modules>
-    <module>order-server</module>
-    <module>item-server</module>
-    <module>common-server</module>
     <module>common-zuul</module>
     <module>common-gateway</module>
     <module>common-seata</module>
     <module>common-admin</module>
     <module>common-tool</module>
+    <module>api-service</module>
+    <module>account-service</module>
+    <module>storage-service</module>
+    <module>order-service</module>
+    <module>item-service</module>
+    <module>business-service</module>
   </modules>
 
   <properties>

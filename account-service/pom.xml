@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>common-seata</artifactId>
+  <artifactId>account-service</artifactId>
 
   <dependencies>
     <dependency>
@@ -29,20 +29,6 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.seata</groupId>
-      <artifactId>seata-spring-boot-starter</artifactId>
-      <version>1.4.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.alibaba.cloud</groupId>
-      <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>io.seata</groupId>
-          <artifactId>seata-spring-boot-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
   </dependencies>
+
 </project>
