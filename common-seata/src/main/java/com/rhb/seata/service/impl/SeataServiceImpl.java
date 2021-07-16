@@ -3,8 +3,8 @@ package com.rhb.seata.service.impl;
 import com.rhb.seata.service.OrderService;
 import com.rhb.seata.service.SeataService;
 import com.rhb.seata.service.StorageService;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +23,9 @@ public class SeataServiceImpl implements SeataService {
   @Autowired
   StorageService storageService;
 
+  @GlobalTransactional
   @Override
-  public void purchase(String userId, String sku, Integer count) {
+  public void purchase(Long userId, Long sku, Integer count) {
     storageService.deduct(sku,count);
     orderService.createOrder(userId,sku,count);
     log.info("购买成功");

@@ -36,14 +36,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper,Order> implements 
 
   @Override
   public void createOrder(Long userId, Long sku, Integer count) {
-//    accountService.deduct(userId,findSkuPrice(sku).multiply(new BigDecimal(count)));
+    accountService.deduct(userId,findSkuPrice(sku).multiply(new BigDecimal(count)));
 
     Order order = Order.builder().userId(userId).count(count).productId(sku)
         .status(0).money(findSkuPrice(sku).multiply(new BigDecimal(count)))
         .build();
 
     this.save(order);
-
     log.info("创建订单：{}",order.getId());
   }
 
@@ -55,9 +54,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper,Order> implements 
    */
   private BigDecimal findSkuPrice(Long sku){
     ImmutableMap<Long, BigDecimal> skuMap = ImmutableMap.of(
-        1L, new BigDecimal(56.3),
-        2L, new BigDecimal(63.1),
-        3L, new BigDecimal(23));
+        100001L, new BigDecimal(56.3),
+        100002L, new BigDecimal(63.1),
+        100003L, new BigDecimal(23));
     return skuMap.get(sku);
   }
 

@@ -1,0 +1,28 @@
+1. 为什么spring事务没有在报错之后回滚操作？
+答： 因为没有JDBC的操作，都是Feign的调用，所以过程报错后，数据不会整体回滚。
+
+2. 异常：io.seata.common.exception.FrameworkException: can not connect to services-server.
+答：1. 官网有解释：https://seata.io/zh-cn/docs/overview/faq.html （Q.7）
+    2. 使用外网ip完成seata server的注册（当前问题）
+
+3. seata-server端在导入config.txt的时候，会提示94个配置，fail4个
+答：4个导入失败的原因是nacos不允许空值导入，查看config.txt可以发现有4个配置是空值。而且在试图添加
+任意值给这4个空值时，seata-server会报错。特别是store.publicKey的配置。所以这个问题可以忽略。
+
+4. 使用nacos配置seata-server容易忽略的点
+答：整体配置流程：
+  1. 配置file.conf修改model为db
+  2. 配置registry.conf修改registry.type=nacos、config.type=nacos然后相应修改nacos配置
+  3. 查看seata/conf/README_zh.md下载config.txt和nacos-config.sh文件
+  4. 执行nacos-config.sh:
+     ./nacos-config.sh -h 127.0.0.1 -p 8848 -g SEATA_GROUP -t xxx -u nacos -w nacos
+  5. 注意查看日志（具体查看日志中指向路径）： /root/logs/seata/seata-server.8091.error.log
+
+5. seata-client使用误区
+答： 要在每个RM处都配置seata，这样才又AT的处理流程。
+
+6. 容易出错\比较重要的配置：vgroup-mapping(可以一样，也可以一个RM一个，但后缀要相同)
+
+
+
+

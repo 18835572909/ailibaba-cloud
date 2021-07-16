@@ -1,12 +1,15 @@
 package com.rhb.storage.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.rhb.pojo.entity.Storage;
+
 /**
  * 仓储服务
  *
  * @author renhuibo
  * @date 2021/7/15 13:56
  */
-public interface StorageService {
+public interface StorageService extends IService<Storage> {
 
   /**
    * 仓储扣除
@@ -14,6 +17,6 @@ public interface StorageService {
    * @param sku sku
    * @param count 扣除数量
    */
-  void deduct(String sku,Integer count);
+  void deduct(Long sku,Integer count);
 
 }

@@ -14,6 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface StorageApi {
 
   @RequestMapping(value = "/deduct",method = RequestMethod.POST)
-  void deduct(@RequestParam("sku") String sku,@RequestParam("count") Integer count);
+  void deduct(@RequestParam("sku") Long sku,@RequestParam("count") Integer count);
 
 }

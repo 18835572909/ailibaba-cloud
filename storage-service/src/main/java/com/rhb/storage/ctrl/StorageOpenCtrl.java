@@ -18,7 +18,7 @@ public class StorageOpenCtrl implements StorageApi {
   StorageService storageService;
 
   @Override
-  public void deduct(String sku, Integer count) {
+  public void deduct(Long sku, Integer count) {
     storageService.deduct(sku,count);
   }
 

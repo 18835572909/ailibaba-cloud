@@ -19,7 +19,7 @@ public class AccountOpenCtrl implements AccountApi {
   AccountService accountService;
 
   @Override
-  public void deduct(String userId, BigDecimal money) {
+  public void deduct(Long userId, BigDecimal money) {
     accountService.deduct(userId, money);
   }
 

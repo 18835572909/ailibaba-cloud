@@ -15,6 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AccountApi {
 
   @RequestMapping(value = "/deduct",method = RequestMethod.POST)
-  void deduct(@RequestParam("userId") String userId, @RequestParam("money") BigDecimal money);
+  void deduct(@RequestParam("userId") Long userId, @RequestParam("money") BigDecimal money);
 
 }

@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.rhb.order.service.OrderService;
 import com.rhb.pojo.api.OrderApi;
 import com.rhb.pojo.entity.Order;
-import java.util.Date;
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,16 +22,13 @@ public class OrderOpenController implements OrderApi {
 
   @Override
   public Order defaultOrder() {
-//    try {
-//      Thread.sleep(50);
-//    } catch (InterruptedException e) {
-//      e.printStackTrace();
-//    }
-//    return Order.builder()
-//        .oid(StrUtil.uuid())
-//        .createTime(new Date())
-//        .build();
-    return null;
+    try {
+      Thread.sleep(50);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    return Order.builder().money(new BigDecimal(56.5))
+        .status(1).productId(7890564512L).count(10).userId(1L).build();
   }
 
   @Override

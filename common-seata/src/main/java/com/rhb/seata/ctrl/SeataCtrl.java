@@ -19,7 +19,7 @@ public class SeataCtrl {
   SeataService seataService;
 
   @RequestMapping("/purchase")
-  public void purchase(String userId,String sku,Integer count){
+  public void purchase(Long userId,Long sku,Integer count){
     seataService.purchase(userId, sku, count);
   }
 

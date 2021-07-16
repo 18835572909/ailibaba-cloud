@@ -19,6 +19,6 @@ public class Account {
   private Long id;
   private Long userId;
   private BigDecimal total;
-  private BigDecimal userd;
+  private BigDecimal used;
   private BigDecimal residue;
 }

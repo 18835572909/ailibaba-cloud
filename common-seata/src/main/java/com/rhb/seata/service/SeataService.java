@@ -15,6 +15,6 @@ public interface SeataService {
    * @param sku sku
    * @param count 数量
    */
-  void purchase(String userId,String sku,Integer count);
+  void purchase(Long userId,Long sku,Integer count);
 
 }

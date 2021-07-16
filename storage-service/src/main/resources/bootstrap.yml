@@ -13,3 +13,31 @@ spring:
         password: pUJW4EFDxVrQLhia
         group: SpringCloudAlibaba
         namespace: 4586dceb-7322-4980-9a60-922b408cc1bf
+    alibaba:
+      seata:
+        #事务群组，要和下方vgroup-mapping保持一致（可以每个应用独立取名，也可以使用相同的名字），要与服务端nacos-config.txt中service.vgroup_mapping中存在,并且要保证多个群组情况下后缀名要保持一致-tx_group
+        tx-service-group: my_test_tx_group
+
+seata:
+  application-id: ${spring.application.name}
+  #事务群组（可以每个应用独立取名，也可以使用相同的名字），要与服务端nacos-config.txt中service.vgroup_mapping中存在,并且要保证多个群组情况下后缀名要保持一致-tx_group
+  service:
+    vgroup-mapping:
+      my_test_tx_group: default
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 124.71.80.133:8848
+      namespace: 14f55a9b-08ef-4941-9c93-5aa5f9b759b9
+      userName: "nacos"
+      password: "pUJW4EFDxVrQLhia"
+      group: SEATA_GROUP
+  config:
+    type: nacos
+    nacos:
+      namespace: 14f55a9b-08ef-4941-9c93-5aa5f9b759b9
+      serverAddr: 124.71.80.133:8848
+      group: SEATA_GROUP
+      userName: "nacos"
+      password: "pUJW4EFDxVrQLhia"
