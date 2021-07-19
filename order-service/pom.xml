@@ -107,6 +107,14 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+    <!--状态机-->
+    <!--spring statemachine-->
+    <dependency>
+      <groupId>org.springframework.statemachine</groupId>
+      <artifactId>spring-statemachine-core</artifactId>
+      <version>2.0.1.RELEASE</version>
+    </dependency>
   </dependencies>
 
   <build>

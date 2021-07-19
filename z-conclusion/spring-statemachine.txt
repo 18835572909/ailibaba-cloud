@@ -1,0 +1,5 @@
+## spring提供的状态机：用来控制流程状态的改变。
+
+# 这里记录下入门思路
+1. 继承StateMachineConfigurerAdapter类重写相关方法，实现流程的定义注册
+2. @WithStateMachine 和 @OnTransition对事件完成监听。

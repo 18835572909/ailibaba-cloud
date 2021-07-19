@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.rhb.order.service.OrderService;
 import com.rhb.pojo.api.OrderApi;
 import com.rhb.pojo.entity.Order;
+import com.rhb.pojo.enums.OrderStatus;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class OrderOpenController implements OrderApi {
       e.printStackTrace();
     }
     return Order.builder().money(new BigDecimal(56.5))
-        .status(1).productId(7890564512L).count(10).userId(1L).build();
+        .status(OrderStatus.FINISH).productId(7890564512L).count(10).userId(1L).build();
   }
 
   @Override

@@ -27,4 +27,25 @@ public interface OrderService extends IService<Order> {
    * @param count 商品数量
    */
   void createOrder(Long userId, Long sku, Integer count);
+
+  /**
+   * 测试状态机的使用： StateMachineConfigurerAdapter
+   * 支付
+   * @param id 订单id
+   */
+  void pay(int id);
+
+  /**
+   * 测试状态机的使用： StateMachineConfigurerAdapter
+   * 发货
+   * @param id 订单id
+   */
+  void deliver(int id);
+
+  /**
+   * 测试状态机的使用： StateMachineConfigurerAdapter
+   * 送达
+   * @param id 订单id
+   */
+  void receive(int id);
 }

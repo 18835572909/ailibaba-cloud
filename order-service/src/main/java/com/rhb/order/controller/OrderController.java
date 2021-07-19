@@ -9,6 +9,7 @@ import com.rhb.pojo.entity.Order;
 import java.util.Date;
 import org.checkerframework.framework.qual.RequiresQualifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,5 +38,18 @@ public class OrderController{
     return orderService.findOrderByOid(oid);
   }
 
+  @GetMapping("/pay")
+  public void pay(int id){
+    orderService.pay(id);
+  }
 
+  @GetMapping("/deliver")
+  public void deliver(int id){
+    orderService.deliver(id);
+  }
+
+  @GetMapping("/receive")
+  public void receive(int id) {
+    orderService.receive(id);
+  }
 }
