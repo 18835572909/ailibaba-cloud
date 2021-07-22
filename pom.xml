@@ -21,6 +21,7 @@
     <module>item-service</module>
     <module>business-service</module>
     <module>common-es</module>
+    <module>common-shardingjdbc</module>
   </modules>
 
   <properties>
