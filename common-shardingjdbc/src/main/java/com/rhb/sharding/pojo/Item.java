@@ -8,17 +8,20 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
+ * {desc}
+ *
  * @author renhuibo
- * @date 2021/7/22 15:44
+ * @date 2021/7/23 11:46
  */
 @Data
 @Builder
-@TableName("t_order")
-public class Order {
+@TableName("t_item")
+public class Item {
   private Long id;
   private Integer userId;
-  private Integer orderId;
-  private String orderNo;
+  private Integer itemId;
+  private String itemNo;
+  private Long oid;
   private Integer isactive;
   private Date inserttime;
   private Date updatetime;

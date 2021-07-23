@@ -1,10 +1,11 @@
 package com.rhb.sharding.suppert;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.sql.DataSource;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
@@ -55,23 +56,37 @@ public class DynamicDataSource {
     /**
      * 配置表规则
      */
-    TableRuleConfiguration tableRuleConfiguration = new TableRuleConfiguration("t_order","db${0..2}.t_order_${1..2}");
-
+    TableRuleConfiguration orderTableRuleConfiguration = new TableRuleConfiguration("t_order","db${0..2}.t_order_${1..2}");
     // 配置分库策略（groovy表达式配置db规则）
-    tableRuleConfiguration.setDatabaseShardingStrategyConfig(new InlineShardingStrategyConfiguration("user_id","db${user_id % 3}"));
+    orderTableRuleConfiguration.setDatabaseShardingStrategyConfig(new InlineShardingStrategyConfiguration("user_id","db${user_id % 3}"));
     // 配置分表策略（groovy表达式配置表规则）
-    tableRuleConfiguration.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration("order_id","t_order_${order_id % 2 + 1}"));
+    orderTableRuleConfiguration.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration("order_id","t_order_${order_id % 2 + 1}"));
+
+    TableRuleConfiguration itemTableRuleConfiguration = new TableRuleConfiguration("t_item","db${0..2}.t_item_${1..2}");
+    itemTableRuleConfiguration.setDatabaseShardingStrategyConfig(new InlineShardingStrategyConfiguration("user_id","db${user_id % 3}"));
+    itemTableRuleConfiguration.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration("item_id","t_item_${item_id % 2 + 1}"));
+
+    List<TableRuleConfiguration> tableRuleConfigurationList = new ArrayList<>();
+    tableRuleConfigurationList.add(orderTableRuleConfiguration);
+    tableRuleConfigurationList.add(itemTableRuleConfiguration);
 
     /**
      * 分片规则
      */
     ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
-    shardingRuleConfiguration.getTableRuleConfigs().add(tableRuleConfiguration);
+    shardingRuleConfiguration.getTableRuleConfigs().addAll(tableRuleConfigurationList);
 
     DataSource dataSource = null;
     try{
+      /**
+       * 打印sql日志信息: ConfigurationPropertyKey
+       */
+      Properties properties = new Properties();
+      properties.setProperty("sql.show","true");
+//      properties.setProperty("sql.simple","true");
+
       dataSource = ShardingDataSourceFactory
-          .createDataSource(dataSourceMap,shardingRuleConfiguration,new Properties());
+          .createDataSource(dataSourceMap,shardingRuleConfiguration,properties);
     }catch (Exception e){
       e.printStackTrace();
     }
