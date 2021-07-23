@@ -58,3 +58,5 @@ springcloudalibaba体系组件使用
       - @Schedule: Spring框架自带
       - Timer
       - Executors.newSchedule(): JUC
+8. 分库分表组件：
+    - ShardingJDBC      
