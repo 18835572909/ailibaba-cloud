@@ -3,6 +3,7 @@ package com.rhb.sharding;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 /**
  * {desc}
@@ -10,8 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author renhuibo
  * @date 2021/7/22 13:55
  */
-@MapperScan(basePackages = {"com.rhb.sharding.mapper"})
 @SpringBootApplication
+@MapperScan(basePackages = {"com.rhb.sharding.mapper"})
+@EntityScan(basePackages = {"com.rhb.sharding.pojo"})
 public class ShardingApplication {
 
   public static void main(String[] args) {

@@ -1,7 +1,5 @@
 package com.rhb.sharding.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
 import lombok.Builder;
@@ -25,4 +23,12 @@ public class Item {
   private Integer isactive;
   private Date inserttime;
   private Date updatetime;
+
+  /**
+   * 测试数据脱敏
+   * no：  明文
+   * name：密文
+   */
+  private String payNo;
+  private String payName;
 }

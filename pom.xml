@@ -22,6 +22,7 @@
     <module>business-service</module>
     <module>common-es</module>
     <module>common-shardingjdbc</module>
+    <module>common-queue</module>
   </modules>
 
   <properties>

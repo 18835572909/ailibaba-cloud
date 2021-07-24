@@ -69,6 +69,7 @@ public class DemoCtrl {
           .itemNo("200"+i)
           .inserttime(new Date())
           .updatetime(new Date())
+          .payName("abcd")
           .isactive(1)
           .userId(i)
           .build();
