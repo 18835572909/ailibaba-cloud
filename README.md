@@ -25,7 +25,7 @@ springcloudalibaba体系组件使用
     - spring security（没用过）
     - shiro
     - jwt
-4. AOP
+4. 动态代理
     - JDK - InvocationHandler + Proxy.newInstance()
     - Cglib - MethodHandler + Enhancer
 5. spring cloud
