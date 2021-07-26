@@ -59,4 +59,10 @@ springcloudalibaba体系组件使用
       - Timer
       - Executors.newSchedule(): JUC
 8. 分库分表组件：
-    - ShardingJDBC      
+    - ShardingJDBC
+        - 配置分库分表策略
+        - 数据脱敏配置         
+9. 自定义spring-boot-starter
+    - 源码解析auto装载过程
+    - META-INF文件文件用途
+    - 自定义starter
