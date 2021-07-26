@@ -1,0 +1,25 @@
+{
+  "properties": [
+    {
+      "name": "bobo.redisson.host",
+      "type": "java.lang.String",
+      "description": "Redis的服务器地址",
+      "defaultValue": "localhost"
+    },{
+      "name": "bobo.redisson.port",
+      "type": "java.lang.Integer",
+      "description": "Redis的服务器端口",
+      "defaultValue": 6379
+    },{
+      "name": "bobo.redisson.timeout",
+      "type": "java.lang.Integer",
+      "description": "Redis的服务器超时时间",
+      "defaultValue": 30000
+    },{
+      "name": "bobo.redisson.password",
+      "type": "java.lang.String",
+      "description": "Redis的服务器密码",
+      "defaultValue": "root"
+    }
+  ]
+}

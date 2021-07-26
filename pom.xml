@@ -23,6 +23,8 @@
     <module>common-es</module>
     <module>common-shardingjdbc</module>
     <module>common-queue</module>
+    <module>rhb-spring-boot-starter</module>
+    <module>rhb-spring-boot-starter-play</module>
   </modules>
 
   <properties>

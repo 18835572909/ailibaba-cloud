@@ -1,0 +1,7 @@
+bobo:
+  redisson:
+    host: 124.71.80.133
+    ssl: false
+    port: 6380
+    timeout: 40000
+    password: LOQYkOKUgUBrywjo
