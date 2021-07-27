@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 //@Configuration
 public class DefaultPointcutAdvisorWrap {
 
-  private static final String EXPRESSION = "execution(* com.rhb.tool.aop.service.impl..*.*(..))";
+  private static final String EXPRESSION = "execution(* com.rhb.tool.aop.services.impl..*.*(..))";
 
   @Bean
   public DefaultPointcutAdvisor defaultPointcutAdvisor(){

@@ -2,7 +2,9 @@
 
 ## 主要关注点
 1. spring-boot-autoconfigure.jar/META-INF下文件作用详解
+
 2. ./META-INF下的文件使用源码详解
+
 3. 根据源码解析，自定义xxx-spring-boot-starter
 
 ## META-INF文件详解
@@ -47,7 +49,12 @@ protected AutoConfigurationImportSelector.AutoConfigurationEntry getAutoConfigur
 }
 ```
 ## JAVA的SPI
-// TODO
+java spi的具体约定为:当服务的提供者，提供了服务接口的一种实现之后，在jar包的META-INF/services/目录里
+同时创建一个以服务接口**全路径**命名的文件。该文件里就是实现该服务接口的具体实现类的**全路径**（多个
+实现类分行存放）。而当外部程序装配这个模块的时候，就能通过该jar包META-INF/services/里的配置文件找到
+具体的实现类名，并装载实例化，完成模块的注入。基于这样一个约定就能很好的找到服务接口的实现类，而不需
+要再代码里制定。jdk提供服务实现查找的一个工具类：java.util.ServiceLoader   
+&& springboot自动装载使用SpringFactoriesLoader &&
 
 ## JNDI
 // TODO
@@ -55,3 +62,6 @@ protected AutoConfigurationImportSelector.AutoConfigurationEntry getAutoConfigur
 ## JNDI是如何打破双亲委派机制
 // TODO
 
+## spring.factoies文件中配置文件详解
+现在只是：org.springframework.boot.autoconfigure.EnableAutoConfiguration
+// TODO

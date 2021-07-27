@@ -1,5 +1,8 @@
 package com.rhb.starter.play.controller;
 
+import com.rhb.starter.spi.SpiService;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;
@@ -34,6 +37,16 @@ public class SampleController {
     RLock spinLock = redissonClient.getSpinLock("");
     RLock multiLock = redissonClient.getMultiLock(fairLock);
     RReadWriteLock readWriteLock = redissonClient.getReadWriteLock("");
+  }
+
+  @GetMapping("spi")
+  public void spiTest(){
+    ServiceLoader<SpiService> loader = ServiceLoader.load(SpiService.class);
+    Iterator<SpiService> iterator = loader.iterator();
+    while(iterator.hasNext()){
+      SpiService next = iterator.next();
+      next.sayHello();
+    }
   }
 
 }
