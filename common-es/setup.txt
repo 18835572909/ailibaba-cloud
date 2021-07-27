@@ -1,0 +1,81 @@
+1.设置内核参数：/etc/sysctl.conf
+vm.max_map_count=655360
+
+2.设置文件描述符限制： /etc/security/limits.conf
+* soft nofile 65536
+* hard nofile 131072
+* soft nproc 2048
+* hard nproc 4096
+
+&&1和2的配置，可以等到启动时候报错，再修改（可以清晰地知道1、2在处理什么问题）
+
+3.es不允许root用户启动，修改用户和分组
+chown user1 es/ -R
+chgrp group1 es/ -R
+
+4.集群配置; es/config/elasticsearch.yml
+将一个节点配置ik分词器后，启动正常，复制节点node2\node3，修改下述配置
+```
+#集群名称
+cluster.name: cluster-es
+#节点名称
+node.name: node-3
+#数据存储路径
+path.data: /opt/es-cluster/node3/data
+#日志存储路径
+path.logs: /opt/es-cluster/node3/logs
+#绑定的ip地址（“0.0.0.0”说明都可以访问）
+network.host: 0.0.0.0
+#对外服务的http端口
+http.port: 9203
+#节点间交互的tcp端口，默认是9300
+transport.tcp.port: 9303
+#节点列表
+discovery.zen.ping.unicast.hosts: ["192.168.0.109:9301", "192.168.0.109:9302","192.168.0.109:9303"]
+#至少两个节点在线
+discovery.zen.minimum_master_nodes: 2
+#接入es-head插件
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+```
+
+5. jvm参数调整：结合服务器的内存情况
+-Xms256m -Xmx256m -Xss128m
+
+6. ik中文分词器
+wget https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.2.1/elasticsearch-analysis-ik-6.2.1.zip
+解压后的文件放入（不是加压的文件夹，是解压文件夹里面的文件，如果没有ik文件，手动创建）es/plugins/ik
+- 校验ik分词器 (curl执行一直编码错误，惭愧惭愧)
+url Post:http://124.71.80.133:9201/_analyze
+body {"text": "中华人民共和国"}
+body {"analyzer": "ik_max_word","text": "中华人民共和国"}
+
+
+7. es-head插件安装（自行百度，找最简单的）
+- 可以是浏览器安装插件
+- 安装es-head插件
+- 编写后台启动脚本： nohup npm run start >nohup.out 2>&1 &
+(可以参考博客：https://www.cnblogs.com/keystone/p/13266528.html)
+
+·复制节点步骤省略描述 >.>
+
+8. 检测集群安装情况（建议：单个节点的ik安装成功后，再配置集群）
+wget http://192.168.0.109:9201/_cat/nodes?pretty
+
+9. 编写一个集群启动脚本（可以优化：建议思路-获取上个执行结果pid，利用kill -9 pid干掉）
+#!/bin/sh
+/opt/es-cluster/node1/bin/elasticsearch -d
+echo 'node1启动成功...'
+/opt/es-cluster/node2/bin/elasticsearch -d
+echo 'node2启动成功...'
+/opt/es-cluster/node3/bin/elasticsearch -d
+echo 'node3启动成功...'
+
+10. 特别注意：如果是微服务整合ES-starter，在安装ES之前，一定要查看项目版本中微服务版本号，根据官网推
+荐安装合适的ES版本，避免出现兼容问题。
+官网地址：https://docs.spring.io/spring-data/elasticsearch/docs/4.2.3/reference/html/#preface.requirements
+版本列表目录：3.1版本
+
+11. 微服务整合ES有两种方式
+> 单独引入ES相关组件：Jest
+> 使用官方的starter: spring-boot-starter-data-elasticsearch (这个需要考虑版本兼容为题)
