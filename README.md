@@ -66,3 +66,4 @@ springcloudalibaba体系组件使用
     - 源码解析auto装载过程
     - META-INF文件文件用途
     - 自定义starter
+    - spi使用原理和样例
