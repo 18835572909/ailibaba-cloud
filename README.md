@@ -1,5 +1,5 @@
 # ailibaba-cloud
-springcloudalibaba体系组件使用
+springcloudalibaba体系组件使用（链接地址是我自己服务器，但对ip加了白名单）
 
 1. redis
     - cache
