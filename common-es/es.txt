@@ -1,0 +1,108 @@
+1. ES的查询：NoSql形式的文档存储
+ - 结构化查询
+ - 相关性排序
+
+2. 数据存储，文档的3个必须的元数据信息(3个元数据组合确定唯一的文档)
+_index：文档在哪存放（索引名）
+_type：文档表示的对象类别（索引中的逻辑分区）
+_id：文档唯一标识（主键）
+
+3. RestApi:索引基础操作
+> 创建索引（自定义id）
+  PUT /_index/_type/_id
+  -H 'ContextType:application/json'
+  -d {"name":"admin","age":23}
+
+> 创建索引（ES自动生成id）
+  PUT /_index/_type
+  -H 'ContextType:application/json'
+  -d {"name":"admin","age":23}
+
+> 获取文档数据
+  GET /_index/_type/_id                             获取携带元数据的文档信息
+  GET /_index/_type/_id/_source                     获取_source的信息，即：put时的json数据
+  GET /_index/_type/_id?_source=field1,field2       获取_source中指定属性信息，即：json中的属性信息
+
+> 校验文档存在
+  HEAD /_index/_type/_id                            相应状态码200，则表示存在
+
+> 更新文档：同所有NoSQL一样，非结构数据不可以更新，可以覆盖（官网解释：在内部，Elasticsearch 已将旧
+文档标记为已删除，并增加一个全新的文档。 尽管你不能再对旧版本的文档进行访问，但它并不会立即消失。当
+继续索引更多的数据，Elasticsearch 会在后台清理这些已删除文档）
+  PUT /_index/_type/_id                             相应数据中_version字段标识更新的次数
+  -H 'ContextType:application/json'
+  -d {"name":"admin2","age":23}
+
+> 文档存在不插入，不存在插入（主要区分：创建、更新）
+  PUT /_index/_type/_id/_create
+  - 插入成功：201 Created
+  - 插入失败：409 Conflict
+
+> 删除文档
+  DELETE /_index/_type/_id
+
+4. 并发处理：乐观锁思路
+  - 之前有提到的更新的时候_version也会随之改变，所以利用乐观锁的方式校验_version来空值并发问题。
+    - PUT /_index/_type/_id?version=1 (只有当文档中_version=1的时候，更新成功)
+  - 使用外部系统控制
+    - PUT /_index/_type/_id?version_type=external&version=10(当文档中_version<10的时候更新，并将_version设置为10)
+
+5. 更新原理：
+    a. 检索并修改它，然后重新索引整个文档(检索-修改-重建索引)
+    b. 文档不能被修改，只能被替换
+
+6. 修改文档部分字段：
+    a. POST /_index/_type/_id/_update        (可以减少重建索引的步骤，从而优化时间)
+       -H 'ContextType:application/json'
+       -d {"name":"admin2","age":23}
+    b. POST /_index/_type/_id/_update        (脚本执行：ctx._source)
+       -H 'ContextType:application/json'
+       -d {"script":"ctx._source.age+=1"}
+     &脚本调用方式随之版本改动 （ElasticSearch 6.2.1使用官网处理数组失败）
+      官网使用说明：https://www.elastic.co/guide/cn/elasticsearch/guide/current/partial-updates.html
+
+7. 修改文档的并发问题：在检索的时候获取当前_version，更新时重建索引会校验_version。
+   如果出现并发问题，这会提交失败。官网推出属性：retry_on_conflict
+   - POST /website/pageviews/1/_update?retry_on_conflict=5
+   疑问：
+      a. 如果每次更新ES都做这样的处理，岂不是没有并发问题，那又何来Put时，携带version参数来实现乐观锁的操作？
+      b. 官网说修改部分字段可以缩小（检索-重建索引）的时间，说明 索引-修改-重建索引 的步骤并没有减少吗？
+         官网说：update API 简单使用与之前描述相同的 检索-修改-重建索引 的处理过程。 区别在于这个过程发生在分片内部，
+         这样就避免了多次请求的网络开销。（我的理解：PUT方式修改重建索引是发生在所有分片中，update发生在单个分片中）
+      c. 数据是如何分片存储的？
+
+8. 批量获取：mgetAPI要求有一个docs数组作为参数，每个元素包含需要检索文档的元数据，包括_index、 _type 和 _id
+eg: GET http://124.71.80.133:9201/website_index/blog_type/_mget
+    {
+         "ids": [
+             "00000001",
+             "00000002"
+         ]
+     }
+eg: GET http://124.71.80.133:9201/_mget
+    {
+        "docs":[
+            {
+                "_index":"website_index",
+                "_type":"blog_type",
+                "_id":"00000001"
+            },
+            {
+                "_index":"website_index",
+                "_type":"blog_type",
+                "_id":"00000002",
+                "_source":"title"
+            }
+        ]
+    }
+
+9. 批量操作：bulk API
+    - 与 mget 可以使我们一次取回多个文档同样的方式， bulk API 允许在单个步骤中进行多次 create 、
+    index 、 update 或 delete 请求。 如果你需要索引一个数据流比如日志事件，它可以排队和索引数百或数千批次。
+
+
+
+
+
+
+

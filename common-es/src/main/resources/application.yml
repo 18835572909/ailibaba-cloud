@@ -1,2 +1,15 @@
+server:
+  port: 10002
+
+spring:
+  application:
+    name: jest-service
+  elasticsearch:
+    rest:
+      uris:
+          - http://124.71.80.133:9201
+          - http://124.71.80.133:9202
+          - http://124.71.80.133:9203
+
 
 
