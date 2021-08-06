@@ -96,10 +96,10 @@ eg: GET http://124.71.80.133:9201/_mget
         ]
     }
 
-9. 批量操作：bulk API
+9. 批量操作：bulk API （批处理api）
     - 与 mget 可以使我们一次取回多个文档同样的方式， bulk API 允许在单个步骤中进行多次 create 、
     index 、 update 或 delete 请求。 如果你需要索引一个数据流比如日志事件，它可以排队和索引数百或数千批次。
-
+    官网URL: https://www.elastic.co/guide/cn/elasticsearch/guide/current/bulk.html
 
 
 

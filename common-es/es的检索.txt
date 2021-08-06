@@ -1,0 +1,26 @@
+1. 为什么ES不将数据存储为二进制文件，而使用JSON格式存储
+答：ES不仅要存储文档数据，还做对其创建索引
+
+2. 三个基本概念
+  > mapping: 映射，处理数据中每个字段如何存储
+  > analysis：分析，全文如何被索引到
+  > Query DSL：ES提供的灵活强大的检索语言
+  > 提醒：倒排索引检索中间件，匹配规则都是：模糊匹配+source。与Mysql等结构化匹配都不同
+
+3. select *
+  > GET /_search ： 查询所有的文档
+  > GET /_index1,index2/_search ：查询索引index1和index2下的所有文档
+  > GET /_type1,type2,_type3*/_search ：查询类型type1、type2、type3下的所有文档
+  > GET /_all/tweet*/_search ：查询所有索引下的tweet开头类型下的所有文档
+  - 以此类推 GET /_index/_type/_search，支持正则匹配，多个_index、_type使用","隔开
+  注意： url中每个位置不可以空缺，使用_all填充。例如：/_all/_type/_search
+
+4. select * from table offset 1 limit 10
+  > GET /_search?size=10&from=1
+  重点： 结构化数据库和分布式系统查询，在分页中，我们都知道，随着分页深度的增加，排序的成本成指数增
+  加，分布式系统和ElasticSearch的分片存储，类似Mysql的分库分表，排序的成本都是极高的。所以建议Web型
+  检索对任何结果都不要超过1000。（查询结果不要超过1000，不是分页大小，可以理解为结果集不要超过1000，
+  随着分页深度的增加，排序后，丢弃无用数据也在指数增加（目标分页前的数据都将丢弃））
+
+5.
+
