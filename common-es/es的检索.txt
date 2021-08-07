@@ -22,5 +22,124 @@
   检索对任何结果都不要超过1000。（查询结果不要超过1000，不是分页大小，可以理解为结果集不要超过1000，
   随着分页深度的增加，排序后，丢弃无用数据也在指数增加（目标分页前的数据都将丢弃））
 
-5.
+5. 请求参数：q
+  > GET /_search?q=+name:John
+  - “+”：标识必须匹配
+  - “-”：标识必须不可以匹配
+  - “” ：不加标识，表示 或
+  - 如果同时使用“+”“-”但符号一定要编码
+
+6. 原理
+  > 倒排索引
+  > 分析：文档分词+标准化分词 （简单解释：字符过滤器-去除非字符、分词器-分 词、Token过滤器-大小写转换）
+  > 映射：
+      - 一般而言：只指定type属性就行
+      - "type":"string":
+          index: analyzed(全文检索)、no_analyzed(精确匹配)、no(不被索引到)
+          analyzed：whitespace 、 simple 和 english
+
+7. 请求体查询：
+  > query:
+  > match_all:
+  > match:
+    {
+        "query": {
+            "match": {
+                "tweet": "elasticsearch"
+            }
+        }
+    }
+    {
+        "query": {
+            "match_all": {}
+        }
+    }
+  > bool:
+  > bool.must:
+  > bool.should:
+  > bool.must_not:
+  > bool.filter:
+    {
+        "bool": {
+            "must": { "match":   { "email": "business opportunity" }},
+            "should": [
+                { "match":       { "starred": true }},
+                { "bool": {
+                    "must":      { "match": { "folder": "inbox" }},
+                    "must_not":  { "match": { "spam": true }}
+                }}
+            ],
+            "minimum_should_match": 1
+        }
+    }
+  > multi_match:  匹配多个字段同一查询
+    {
+        "multi_match": {
+            "query":    "full text search",
+            "fields":   [ "title", "body" ]
+        }
+    }
+  > range: 范伟查询
+  {
+      "range": {
+          "age": {
+              "gte":  20,
+              "lte":   30,
+              "lt":   30,
+              "gt":   30
+          }
+      }
+  }
+  > term: 精准匹配单个值（精准匹配）
+  {
+      "term": {
+          "age": 26
+      }
+  }
+  > terms: 精准匹配多个值（精准匹配）
+  {
+      "terms": {
+          "tag": [
+              "search",
+              "full_text",
+              "nosql"
+          ]
+      }
+  }
+  > exists：存在
+  > missing：不存在
+  {
+      "exists":   {
+          "field":    "title"
+      }
+  }
+  > constant_score: 同filter，性能相同
+  
+8. 匹配和过滤
+  - 匹配： 指的是相似性，携带_score （由于需要计算相关性，性能较差【都是基于同等量的数据】）
+  - 过滤： 指的是完全比匹配（只获取yes、no的结果，性能较好）
+
+9. 复合查询
+  {
+      "bool": {
+          "must":     { "match": { "title": "how to make millions" }},
+          "must_not": { "match": { "tag":   "spam" }},
+          "should": [
+              { "match": { "tag": "starred" }}
+          ],
+          "filter": {
+            "bool": {
+                "must": [
+                    { "range": { "date": { "gte": "2014-01-01" }}},
+                    { "range": { "price": { "lte": 29.99 }}}
+                ],
+                "must_not": [
+                    { "term": { "category": "ebooks" }}
+                ]
+            }
+          }
+      }
+  }
+
+
 
