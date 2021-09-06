@@ -114,7 +114,7 @@
       }
   }
   > constant_score: 同filter，性能相同
-  
+
 8. 匹配和过滤
   - 匹配： 指的是相似性，携带_score （由于需要计算相关性，性能较差【都是基于同等量的数据】）
   - 过滤： 指的是完全比匹配（只获取yes、no的结果，性能较好）
@@ -141,5 +141,7 @@
       }
   }
 
-
+10. 查询分析
+  > GET /gb/tweet/_validate/query  :  _validate-校验Api合法性
+  > GET /gb/tweet/_validate/query?explain : explain-分析查询效率，等同于Mysql的explain
 

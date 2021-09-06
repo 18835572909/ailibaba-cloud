@@ -25,6 +25,7 @@
     <module>common-queue</module>
     <module>rhb-spring-boot-starter</module>
     <module>rhb-spring-boot-starter-play</module>
+    <module>common-rpc</module>
   </modules>
 
   <properties>

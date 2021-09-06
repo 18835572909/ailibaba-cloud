@@ -1,0 +1,30 @@
+syntax="proto3";
+option java_outer_classname="MonitorDataPojo";
+option java_package="com.rhb.rpc.protobuf.pojo";
+
+import public "google/protobuf/timestamp.proto";
+
+message MonitorData{
+  google.protobuf.Timestamp option = 1;
+  int64 longValue = 2;
+  string host =3;
+  map<string,string> tags = 4;
+  string cluster=5;
+  string routeKey=6;
+
+  message QueryRequest{
+    string queryField=1;
+    string queryValue=2;
+    double score=3;
+    bool isLike=4;
+  }
+
+  enum RunStatus{
+    UNKNOW=0;
+    RUNNING=1;
+    STOP=2;
+  }
+
+  QueryRequest queryRequest=7;
+  RunStatus runStatus=8;
+}
