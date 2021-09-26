@@ -26,6 +26,9 @@
     <module>rhb-spring-boot-starter</module>
     <module>rhb-spring-boot-starter-play</module>
     <module>common-rpc</module>
+    <module>common-jdk</module>
+    <module>common-leetcode</module>
+    <module>common-netty</module>
   </modules>
 
   <properties>
