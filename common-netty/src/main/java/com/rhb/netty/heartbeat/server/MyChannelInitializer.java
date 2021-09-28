@@ -1,7 +1,6 @@
 package com.rhb.netty.heartbeat.server;
 
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
@@ -19,6 +18,7 @@ public class MyChannelInitializer extends ChannelInitializer<SocketChannel> {
   @Override
   protected void initChannel(SocketChannel sc) throws Exception {
     sc.pipeline()
+        // 解决TCP沾包、拆包的问题
         .addLast(new DelimiterBasedFrameDecoder(Integer.MAX_VALUE, Unpooled.copiedBuffer("$_".getBytes())))
         .addLast(new StringEncoder())
         .addLast(new StringDecoder())

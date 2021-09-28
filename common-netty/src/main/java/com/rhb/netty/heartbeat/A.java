@@ -8,4 +8,12 @@ package com.rhb.netty.heartbeat;
  */
 public class A {
 
+  public static void main(String[] args) {
+    byte[] bytes = new byte[5];
+
+    Integer a = 5;
+
+
+  }
+
 }

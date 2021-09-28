@@ -2,6 +2,7 @@ package com.rhb.netty.heartbeat.client;
 
 import cn.hutool.core.date.DateUtil;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
@@ -36,27 +37,27 @@ public class HeartbeatNettyClient implements Runnable{
           .handler(new HeartbeatChannelInitializer());
 
       channelFuture = bootstrap.connect("localhost", 10002);
-      channelFuture.addListener(new ChannelFutureListener() {
-        @Override
-        public void operationComplete(ChannelFuture channelFuture) throws Exception {
-          if(!channelFuture.isSuccess()){
-            EventLoop eventExecutors = channelFuture.channel().eventLoop();
-
-            eventExecutors.schedule(new Runnable() {
-              @Override
-              public void run() {
-                log.error("服务端链接不上，开始重连操作...");
-                System.err.println("服务端链接不上，开始重连操作...");
-                start();
-              }
-            },1, TimeUnit.SECONDS);
-          }else{
-            log.info("服务端链接成功...");
-            System.err.println("服务端链接成功...");
-
-          }
-        }
-      });
+//      channelFuture.addListener(new ChannelFutureListener() {
+//        @Override
+//        public void operationComplete(ChannelFuture channelFuture) throws Exception {
+//          if(!channelFuture.isSuccess()){
+//            EventLoop eventExecutors = channelFuture.channel().eventLoop();
+//
+//            eventExecutors.schedule(new Runnable() {
+//              @Override
+//              public void run() {
+//                log.error("服务端链接不上，开始重连操作...");
+//                System.err.println("服务端链接不上，开始重连操作...");
+//                start();
+//              }
+//            },1, TimeUnit.SECONDS);
+//          }else{
+//            log.info("服务端链接成功...");
+//            System.err.println("服务端链接成功...");
+//
+//          }
+//        }
+//      });
       sendMsg(channelFuture);
     }catch (Exception e){
       e.printStackTrace();

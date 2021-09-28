@@ -19,6 +19,12 @@ public class ObjDecoder extends ByteToMessageDecoder {
   @Override
   protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf,
       List<Object> list) throws Exception {
+    /**
+     * 如果报文长度小于4，说明指令+内容都没有，直接返回
+     */
+    if(byteBuf.readableBytes()<4){
+      return;
+    }
 
     byteBuf.markReaderIndex();
     int dataLength = byteBuf.readInt();
