@@ -15,7 +15,10 @@ EventLoop、EventLoopGroup、ChannelPipeline、ServerBootStrap、BootStrap
 
 4. 应用之Http服务器：HttpRequestEncoder、HttpResponseDecoder
 
-5. 应用之心跳检测机制： IdeaStateHandler+useEventTriggered()
+5. 应用之心跳检测机制： IdeaStateHandler() + useEventTriggered()
+   1> 客户端监听ALL_IDLE事件，发送Ping，服务器检测是ping的请求，响应pong
+   2> 服务端监听READER_IDLE事件，同上。
+   注意：这里IdleEvent事件，是指连接空闲时间 事件触发。（所以当你只开启server端，server端的IdleStateHandler()是不会触发的）
 
 6. 应用之高效序列化：ProtoBuf、ProtoStuff
 
@@ -53,3 +56,9 @@ EventLoop、EventLoopGroup、ChannelPipeline、ServerBootStrap、BootStrap
     1. 自定义的协议解析器，在实际Handler之前，已经将ByteBuf的数据转变成具体的对象，在Handler中接受的参数，
   就是自定义协议解析器，反序列后的对象。
     2. Netty提供的分隔符、数据包长度的两种解析器，在实际handler处理的时候，还是ByteBuf.
+
+9. 断线重连：涉及两个部分
+  核心方法是： EventLoop.schedule(new Runnable(),ttl,TimeUnit);
+
+  1. 首次连接时，连接失败，重新连接：client.connect().addListener(new ChannelFutureListener());
+  2. 连接成功后，中途断开，触发ChannelInactive()时，重新连接：ChannelHandlerContext.channel().eventLoop().schedule();

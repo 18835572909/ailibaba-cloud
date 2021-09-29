@@ -1,7 +1,10 @@
 package com.rhb.netty.heartbeat.blog;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.EventLoop;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {desc}
@@ -28,5 +31,19 @@ public class ClientHandler extends CustomHeartbeatHandler {
   protected void handleAllIdle(ChannelHandlerContext ctx) {
     super.handleAllIdle(ctx);
     sendPingMsg(ctx);
+  }
+
+  @Override
+  public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    EventLoop eventLoop = ctx.channel().eventLoop();
+    eventLoop.schedule(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println("-------------客户端重新连接-----------------");
+        new Client().connect();
+      }
+    },3, TimeUnit.SECONDS);
+
+    super.channelInactive(ctx);
   }
 }

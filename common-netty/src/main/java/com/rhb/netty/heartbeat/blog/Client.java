@@ -1,7 +1,6 @@
 package com.rhb.netty.heartbeat.blog;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -25,11 +24,13 @@ public class Client {
 
   private Channel channel;
 
-  public void start(){
+  private static Bootstrap bootstrap;
+
+  public void connect(){
     NioEventLoopGroup workGroup = new NioEventLoopGroup(4);
     Random random = new Random(System.currentTimeMillis());
     try {
-      Bootstrap bootstrap = new Bootstrap();
+      bootstrap = new Bootstrap();
       bootstrap
           .group(workGroup)
           .channel(NioSocketChannel.class)
@@ -53,7 +54,7 @@ public class Client {
        */
       doConnect(bootstrap);
 
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < 3; i++) {
         int i1 = random.nextInt(20000);
         String content = "Main - client msg: " + i+"-"+i1;
 
@@ -63,7 +64,7 @@ public class Client {
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } finally {
+    }finally {
       workGroup.shutdownGracefully();
     }
   }
@@ -80,23 +81,22 @@ public class Client {
       public void operationComplete(ChannelFuture futureListener) throws Exception {
         if (futureListener.isSuccess()) {
           channel = futureListener.channel();
-          System.out.println("Connect to server successfully!");
+          System.out.println("-------------客户端连接成功----------------");
         } else {
-          System.out.println("Failed to connect to server, try connect after 10s");
-
           futureListener.channel().eventLoop().schedule(new Runnable() {
             @Override
             public void run() {
+              System.out.println("-------------客户端重新连接-----------------");
               doConnect(bootstrap);
             }
-          }, 10, TimeUnit.SECONDS);
+          }, 3, TimeUnit.SECONDS);
         }
       }
     });
   }
 
   public static void main(String[] args) {
-    new Client().start();
+    new Client().connect();
   }
 
 
