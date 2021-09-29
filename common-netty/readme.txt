@@ -62,3 +62,8 @@ EventLoop、EventLoopGroup、ChannelPipeline、ServerBootStrap、BootStrap
 
   1. 首次连接时，连接失败，重新连接：client.connect().addListener(new ChannelFutureListener());
   2. 连接成功后，中途断开，触发ChannelInactive()时，重新连接：ChannelHandlerContext.channel().eventLoop().schedule();
+
+10. BIO\NIO\EPOLL的区别于理解
+
+11. Netty的零拷贝
+
