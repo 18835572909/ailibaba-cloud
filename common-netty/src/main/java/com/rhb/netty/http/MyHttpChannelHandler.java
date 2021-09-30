@@ -2,7 +2,7 @@ package com.rhb.netty.http;
 
 import cn.hutool.json.JSONUtil;
 import com.google.common.net.HttpHeaders;
-import com.rhb.netty.base.channelhandler.SimpleChannelHandler;
+import com.rhb.netty.base.business.channelhandler.SimpleChannelHandler;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;

@@ -1,4 +1,4 @@
-package com.rhb.netty.base;
+package com.rhb.netty.base.business;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;

@@ -1,4 +1,4 @@
-package com.rhb.netty.base.channelhandler;
+package com.rhb.netty.base.business.channelhandler;
 
 import cn.hutool.core.util.CharsetUtil;
 import io.netty.buffer.ByteBuf;

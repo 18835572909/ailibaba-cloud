@@ -2,6 +2,7 @@ package com.rhb.netty.heartbeat.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,18 +35,18 @@ public class HeartbeatChannelHandler extends SimpleChannelInboundHandler{
     if(evt instanceof IdleStateEvent){
       IdleStateEvent event = (IdleStateEvent) evt;
 
-      if(IdleStateEvent.WRITER_IDLE_STATE_EVENT.equals(event)){
+      if(IdleState.WRITER_IDLE.equals(event.state())){
         log.info("读取超时..");
 
         String heartbeat = "ping&_";
         ctx.channel().writeAndFlush(heartbeat);
       }
 
-      if(IdleStateEvent.READER_IDLE_STATE_EVENT.equals(event)){
+      if(IdleState.READER_IDLE.equals(event.state())){
         log.info("写入超时..");
       }
 
-      if(IdleStateEvent.ALL_IDLE_STATE_EVENT.equals(event)){
+      if(IdleState.ALL_IDLE.equals(event.state())){
         log.info("读取、写入超时..");
       }
     }

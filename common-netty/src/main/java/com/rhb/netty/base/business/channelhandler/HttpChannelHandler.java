@@ -1,4 +1,4 @@
-package com.rhb.netty.base.channelhandler;
+package com.rhb.netty.base.business.channelhandler;
 
 import cn.hutool.json.JSONUtil;
 import io.netty.channel.Channel;

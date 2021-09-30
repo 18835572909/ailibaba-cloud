@@ -1,12 +1,11 @@
-package com.rhb.netty.base;
+package com.rhb.netty.base.business;
 
-import com.rhb.netty.base.channelhandler.HeartBeatChannelHandler;
-import com.rhb.netty.base.channelhandler.HttpChannelHandler;
+import com.rhb.netty.base.business.channelhandler.HeartBeatChannelHandler;
+import com.rhb.netty.base.business.channelhandler.HttpChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpRequestEncoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 
 /**

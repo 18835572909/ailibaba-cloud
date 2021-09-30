@@ -1,4 +1,4 @@
-package com.rhb.netty.base.channelhandler;
+package com.rhb.netty.base.business.channelhandler;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;

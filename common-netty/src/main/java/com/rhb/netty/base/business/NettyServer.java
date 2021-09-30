@@ -1,4 +1,4 @@
-package com.rhb.netty.base;
+package com.rhb.netty.base.business;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.bootstrap.ServerBootstrap;

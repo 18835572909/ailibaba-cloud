@@ -18,7 +18,7 @@ EventLoop、EventLoopGroup、ChannelPipeline、ServerBootStrap、BootStrap
 5. 应用之心跳检测机制： IdeaStateHandler() + useEventTriggered()
    1> 客户端监听ALL_IDLE事件，发送Ping，服务器检测是ping的请求，响应pong
    2> 服务端监听READER_IDLE事件，同上。
-   注意：这里IdleEvent事件，是指连接空闲时间 事件触发。（所以当你只开启server端，server端的IdleStateHandler()是不会触发的）
+   注意：这里IdleEvent事件，是指连接空闲时间 事件触发[有链接才会有触发]。（所以当你只开启server端，server端的IdleStateHandler()是不会触发的）
 
 6. 应用之高效序列化：ProtoBuf、ProtoStuff
 
