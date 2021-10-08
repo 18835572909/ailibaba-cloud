@@ -7,8 +7,8 @@ Document
 Field
 　　es中一个文档中对应的多个列与mysql数据库中每一列对应
 Mapping
-　　能够理解为mysql或者solr中对应的schema，只不过有些时候es中的mapping增长了动态识别功能，感受很强大的样子，其实实际生产环境上不建议使用，最好仍是开始制定好了对应的schema为主。
+　　能够理解为mysql或者solr中对应的schema，只不过有些时候es中的mapping增长了动态识别功能，感觉很强大的样子，其实实际生产环境上不建议使用，最好仍是开始制定好了对应的schema为主。
 indexed
 　　就是名义上的创建索引。mysql中通常会对常用的列增长相应的索引用于提升查询速度，而在es中默认都是会加上索引的，除非你特殊制定不创建索引只是进行存储用于展现，这个须要看你具体的需求和业务进行设定了。
 Query DSL
-　　相似于mysql的sql语句，只不过在es中是使用的json格式的查询语句，专业术语就叫：QueryDSLjav
+　　相似于mysql的sql语句，只不过在es中是使用的json格式的查询语句

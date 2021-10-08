@@ -5,8 +5,12 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.DefaultFileRegion;
+import io.netty.channel.FileRegion;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.CharsetUtil;
+import java.io.File;
+import java.nio.channels.FileChannel;
 
 /**
  *  ByteBuf-Api使用样例
@@ -79,6 +83,14 @@ public class ByteBufApiUseTheSample {
 
     System.out.println(buf.readerIndex());
     System.out.println(buf.writerIndex());
+  }
+
+  public static void io(){
+    File file = new File("D:/1.txt");
+    DefaultFileRegion defaultFileRegion = new DefaultFileRegion(file,0,file.length());
+//    FileChannel fileChannel =
+//    defaultFileRegion.transferTo();
+
   }
 
 }
