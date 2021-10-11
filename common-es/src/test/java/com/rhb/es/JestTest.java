@@ -1,6 +1,8 @@
 package com.rhb.es;
 
 import cn.hutool.json.JSONUtil;
+import com.google.gson.JsonObject;
+import com.rhb.es.jest.EsBaseOperate;
 import com.rhb.es.pojo.User;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.DocumentResult;
@@ -9,7 +11,9 @@ import io.searchbox.core.Index.Builder;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -66,4 +70,34 @@ public class JestTest {
     }
   }
 
+  @Resource
+  EsBaseOperate baseOperate;
+
+  private final String index = "es_test";
+
+  private final String type = "test_user";
+
+  @Test
+  public void t0(){
+    List<Object> list = new ArrayList<>();
+    for (int i=0;i<100;i++){
+      User user = User.builder().city("广州").age(23+i).username("小张"+i).sex(i%2).password("admin").build();
+      list.add(user);
+    }
+    baseOperate.batchInsertDocs(index,type,list);
+  }
+
+  @Test
+  public void t1(){
+    JsonObject objByEsId = baseOperate.getObjByEsId(index, type, "ccvUY3wBFP--AVWqGvWT");
+    log.info("obj:{}",objByEsId);
+  }
+
+  @Test
+  public void t2(){
+    Map<String,Object> map = new HashMap<>();
+    map.put("username","admin");
+    map.put("age",60);
+    baseOperate.updateByEsId(index,type,"ccvUY3wBFP--AVWqGvWT",map);
+  }
 }

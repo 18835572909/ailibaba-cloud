@@ -1,0 +1,219 @@
+DSL搜索
+  > 查询所有文档——matchAllQuery
+  > 分页查询
+  > 提取结果集中的文档
+  > 词项匹配——termQuery
+  > 根据id精确匹配——termsQuery
+  > 全文检索—— matchQuery
+  > operator
+  > minimum_should_match
+  > 多域检索——multiMatchQuery
+  > boost权重
+  > 布尔查询——boolQuery
+  > 三个参数
+  > 过滤器——filter
+
+分页查询所有，显示字段username、password
+{
+    "from":0,
+    "size":5,
+    "query":{
+        "match_all":{
+
+        }
+    },"_source":["username","password"]
+}
+
+termQuery：精准匹配
+{
+    "from":0,
+    "size":5,
+    "query":{
+        "term":{
+            "age":23
+        }
+    },"_source":["username","password","age"]
+}
+
+termsQuery：根据id精确匹配
+{
+    "from":0,
+    "size":5,
+    "query":{
+        "ids":{
+            "values":["a8vUY3wBFP--AVWqGvWT","dcvbY3wBFP--AVWqhvUb"]
+        }
+    }
+    // ,"_source":["username","password","age"]
+}
+
+matchQuery：全文检索
+{
+    "from":0,
+    "size":5,
+    "query":{
+        "match":{
+            "username":"小张2"
+        }
+    }
+}
+
+matchQuery-operator（and\or）: 对于查询目标的分词匹配逻辑关系。eg："小张2"分词后-> "小张"，"2" 则，匹配username=小张 并且 username=2
+&& 注意：operator的主体是“分词”
+{
+    "from":0,
+    "size":5,
+    "query":{
+        "match":{
+            "username":{
+                "query":"小张2",
+                "operator":"and"
+            }
+        }
+    }
+}
+
+matchQuery-minimum_should_match：分词后匹配的占比
+&& 注意：minimum_should_match的主体是“分词”
+eg: operator = or表示只要有一个词匹配上就得分，如果实现三个词至少有两个词匹配如何实现
+  => minimum_should_match = "80%"
+
+{
+    "query": {
+        "match": {
+            "name": {
+                "query": "spring开发框架",
+                "minimum_should_match":"80%"
+            }
+        }
+    }
+}
+三个词在文档的匹配占比为80%，即3*0.8=2.4，向上取整得2，表 示至少有两个词在文档中才算匹配成功
+
+&&上述的term和match系列只能匹配一个&&
+
+multiMatchQuery： 多值匹配
+&& 注意：
+{
+    "from":0,
+    "size":5,
+    "query":{
+        "multi_match":{
+            "query":"小张是个瓜",
+            "minimum_should_match":"30%",
+            "fields":["username","password"]
+        }
+    }
+}
+
+^：符号并指定权重
+
+bool: must、should、must_not
+
+filter: 过滤
+
+sort: 排序
+
+highlight: 高亮
+
+模糊查询：
+  -- wildcard: 通配符
+  -- prefix： 前缀
+  --
+---------------------------------------------------------------------------------------------------
+{
+    "query":{
+        "bool":{
+            "must":[
+            {
+                "match":{
+                    "username":"小张"
+                }
+            }
+            ],
+            "should":[{
+                "range":{
+                    "age":{
+                        "lte":50,
+                        "gte":45
+                    }
+                }
+            }
+            ],
+            "filter":[
+                {
+                    "range":{
+                        "age":{
+                            "lte":46
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "sort":[
+        {
+            "age":"desc"
+        },
+        {
+            "username.keyword":"asc"
+        }
+    ],
+    "highlight":{
+        "pre_tags":["<tag>"],
+        "post_tags":["</tag>"],
+        "fields":{
+            "username":{}
+        }
+    }
+}
+
+---------------------------------------------------------------------------------------------------
+
+DDL语法总览图：
+
+--| _source
+--| query
+    --| match_all
+        --| {}
+    --| match
+        --| "fieldName"
+            --| query
+            --| operator
+            --| minimum_should_match
+    --| multi_match
+        --| query
+        --| minimum_should_match
+        --| fields:[]
+    --| term
+        --| "fieldName":"fieldValue"
+    --| ids
+        --| values:[]
+    --| bool
+        --| must
+            --| match
+            --| multi_match
+            --| term
+            --| ids
+        --| should
+            --| match
+            --| multi_match
+            --| term
+            --| ids
+        --| must_not
+            --| match
+            --| multi_match
+            --| term
+            --| ids
+        --| filter
+            --| match
+            --| multi_match
+            --| term
+            --| ids
+--| from
+--| size
+--| sort
+--| highlight
+    --| pre_tags
+    --| post_tags
+    --| fields
